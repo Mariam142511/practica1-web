@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mi primera web - Mariam</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>🌼 Bienvenida a mi primera web 🌼</h1>
+  <p>Esta es una página de ejemplo para la práctica 1, parte 2.2.</p>
+
+  <label for="texto">Escribe algo:</label>
+  <input id="texto" type="text" placeholder="Tu texto aquí...">
+  <button id="boton">Mostrar mensaje</button>
+
+  <script>
+    document.getElementById('boton').addEventListener('click', () => {
+      const valor = document.getElementById('texto').value.trim();
+      if (valor) {
+        alert("Escribiste: " + valor);
+      } else {
+        alert("No escribiste nada 😅");
+      }
+    });
+  </script>
+</body>
+</html>
