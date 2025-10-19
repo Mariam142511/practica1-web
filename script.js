@@ -1,31 +1,46 @@
-// script.js
-async function buscarPelicula() {
-  const titulo = document.getElementById("texto")?.value.trim();
-  if (!titulo) {
-    alert("Por favor, escribe el nombre de una película.");
-    return;
-  }
+console.log("script.js cargó");
+
+document.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("texto");
+  const btn   = document.getElementById("boton");
+  const out   = document.getElementById("resultado");
 
   const apiKey = "dc9c7974"; 
-  const url = `https://www.omdbapi.com/?t=${encodeURIComponent(titulo)}&apikey=${apiKey}`;
 
-  try {
-    const respuesta = await fetch(url);
-    const datos = await respuesta.json();
-
-    if (datos.Response === "False") {
-      document.getElementById("resultado").textContent = "Película no encontrada ";
+  async function buscarPelicula() {
+    const titulo = input.value.trim();
+    if (!titulo) {
+      out.textContent = "Por favor, escribe el nombre de una película.";
       return;
     }
 
-    const info = `🎥 ${datos.Title} — Director: ${datos.Director} | Año: ${datos.Year}`;
-    document.getElementById("resultado").textContent = info;
-    console.log("Datos OMDb:", datos); // útil para depurar en F12 → Console
-  } catch (err) {
-    console.error("Error al conectar con OMDb:", err);
-    document.getElementById("resultado").textContent = "Error de conexión con la API.";
-  }
-}
+    const url = `https://www.omdbapi.com/?t=${encodeURIComponent(titulo)}&apikey=${apiKey}`;
+    console.log("Consultando:", url);
 
-// Conecta el botón a la función (asegúrate de tener <button id="boton">)
-document.getElementById("boton").addEventListener("click", buscarPelicula);
+    try {
+      out.textContent = "Buscando…";
+      const resp = await fetch(url);
+      const datos = await resp.json();
+      console.log("Respuesta OMDb:", datos);
+
+      if (datos.Response === "False") {
+        out.textContent = "Película no encontrada ";
+        return;
+      }
+
+      // Muestra director y año
+      out.textContent = ` ${datos.Title} — Director: ${datos.Director} | Año: ${datos.Year}`;
+
+      // Si quieres también el póster, cambia por:
+      // out.innerHTML = ` ${datos.Title} — Director: ${datos.Director} | Año: ${datos.Year}<br><img src="${datos.Poster}" alt="Póster de ${datos.Title}">`;
+    } catch (e) {
+      console.error("Error OMDb:", e);
+      out.textContent = "Error de conexión con la API.";
+    }
+  }
+
+  // Click y Enter
+  btn.addEventListener("click", buscarPelicula);
+  input.addEventListener("keydown", (e) => { if (e.key === "Enter") buscarPelicula(); });
+});
+
